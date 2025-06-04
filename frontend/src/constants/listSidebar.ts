@@ -17,11 +17,13 @@ import LogoutIcon from '@/assets/img/logout.svg'
 
 export const menuItems: MenuItems[] = [
   { name: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
-  { name: 'Quản lý Hộ gia đình', icon: OrderListsIcon, href: '/household' },
-  { name: 'Quản lý Nhân khẩu', icon: ContactIcon, href: '' },
+  { name: 'Quản lý Hộ gia đình', icon: ContactIcon, href: '/households' },
+  { name: 'Quản lý Nhân khẩu', icon: TeamIcon, href: '/residents' },
+  { name: 'Quản lý Phương tiện', icon: TableIcon, href: '/vehicles' },
   { separator: true },
   { name: 'Quản lý Khoản thu', icon: UiElementsIcon, href: '' },
   { name: 'Quản lý Đợt thu', icon: ProductStockIcon, href: '' },
+  { name: 'Quản lý Các loại phí', icon: ProductStockIcon, href: '' },
   { separator: true },
   { name: 'Đăng xuất', icon: LogoutIcon, action: 'logout' },
 ]

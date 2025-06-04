@@ -232,6 +232,7 @@ const handleSubmit = async () => {
       // @ts-ignore
       await householdStore.updateHousehold(household.id, household)
     } else {
+      // @ts-ignore
       await householdStore.createHousehold(household)
     }
     isModalVisible.value = false
