@@ -51,15 +51,15 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-type ColumnType = 'number' | 'string' | 'checkbox'
+type ColumnType = 'number' | 'string' | 'checkbox' | 'function'
 
-interface IColumn {
+export interface IColumn {
   prop: string
   label: string
   width: number
   type: ColumnType
   align?: 'left' | 'center' | 'right'
-  fixed?: boolean
+  fixed?: boolean | 'left' | 'right'
   lineClamp?: number
 }
 

@@ -51,7 +51,7 @@ exports.getAllHouseholds = async ({
         include: includeOptions,
         offset,
         limit: per_page,
-        order: [["id", "ASC"]],
+        order: [["id", "DESC"]],
         distinct: true,
     });
 
