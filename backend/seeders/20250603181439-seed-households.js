@@ -7,7 +7,7 @@ module.exports = {
         for (let i = 1; i <= 15; i++) {
             households.push({
                 id: i,
-                owner_name: `Chu hộ ${i}`,
+                owner_name: `Chủ hộ ${i}`,
                 apartment_code: `B3-${200 + i}`,
                 address: `Block B3, Floor 20, Apartment ${200 + i}`,
                 phone_number: `09876543${(100 + i)

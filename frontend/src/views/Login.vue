@@ -1,13 +1,11 @@
 <template>
   <el-row class="login">
-    <el-col :span="8" class="login__image">
-      <!-- <img src="@/assets/img/banner-auth.png" alt="login" /> -->
-    </el-col>
-    <el-col :span="16" class="login__main">
+    <!-- <el-col :span="8" class="login__image">
+      <img src="@/assets/img/banner-auth.png" alt="login" />
+    </el-col> -->
+    <el-col :span="24" class="login__main">
       <div class="login__main--form">
-        <router-link class="login__main--logo logo" to=""
-          >Hệ thống quản lý chung cư BlueMoon</router-link
-        >
+        <span class="login__main--logo logo">Hệ thống quản lý chung cư BlueMoon</span>
         <el-form
           ref="formRef"
           :model="authStore"
@@ -194,20 +192,25 @@ const callback: CallbackTypes.TokenResponseCallback = async (response) => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #fff;
+  background: #4880ff;
+  background-image: url(/Shape.png);
 
   &--form {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    height: 550px;
+    width: 500px;
+    border-radius: 20px;
     margin: 0 auto;
+    background: #fff;
   }
 
   &--logo {
     margin-bottom: 50px;
     width: auto !important;
+    font-weight: 620;
   }
 }
 </style>

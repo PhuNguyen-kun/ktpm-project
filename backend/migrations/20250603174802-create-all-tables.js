@@ -262,7 +262,7 @@ module.exports = {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            campaign_id: {
+            fee_campaign_id: {
                 type: Sequelize.BIGINT,
                 allowNull: false,
                 references: { model: "fee_campaigns", key: "id" },
@@ -292,7 +292,7 @@ module.exports = {
             paid_by: {
                 type: Sequelize.BIGINT,
                 allowNull: true,
-                references: { model: "users", key: "id" },
+                references: { model: "residents", key: "id" },
                 onUpdate: "CASCADE",
                 onDelete: "SET NULL",
             },

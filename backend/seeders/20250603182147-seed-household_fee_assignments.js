@@ -8,7 +8,7 @@ module.exports = {
             [
                 {
                     id: 1,
-                    campaign_id: 1,
+                    fee_campaign_id: 1,
                     household_id: 1,
                     amount_due: 150000,
                     amount_paid: 0,
@@ -20,19 +20,19 @@ module.exports = {
                 },
                 {
                     id: 2,
-                    campaign_id: 2,
+                    fee_campaign_id: 2,
                     household_id: 1,
                     amount_due: 70000,
                     amount_paid: 70000,
                     payment_date: "2024-01-05",
-                    paid_by: 2,
+                    paid_by: 1,
                     payment_status: 2,
                     created_at: now,
                     updated_at: now,
                 },
                 {
                     id: 3,
-                    campaign_id: 3,
+                    fee_campaign_id: 3,
                     household_id: 2,
                     amount_due: 70000,
                     amount_paid: 70000,
@@ -44,7 +44,7 @@ module.exports = {
                 },
                 {
                     id: 4,
-                    campaign_id: 4,
+                    fee_campaign_id: 4,
                     household_id: 3,
                     amount_due: 1200000,
                     amount_paid: 0,

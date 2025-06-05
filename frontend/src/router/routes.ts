@@ -32,6 +32,21 @@ const routes: RouteRecordRaw[] = [
         name: 'vehicles',
         component: () => import('@/views/Vehicles.vue'),
       },
+      {
+        path: 'fee-types',
+        name: 'fee-types',
+        component: () => import('@/views/FeeTypes.vue'),
+      },
+      {
+        path: 'fee-campaigns',
+        name: 'fee-campaigns',
+        component: () => import('@/views/FeeCampaigns.vue'),
+      },
+      {
+        path: 'household-fee-assignments',
+        name: 'household-fee-assignments',
+        component: () => import('@/views/HouseholdFeeAssignments.vue'),
+      },
     ],
   },
 ]

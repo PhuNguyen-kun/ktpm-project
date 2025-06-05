@@ -21,9 +21,9 @@ export const menuItems: MenuItems[] = [
   { name: 'Quản lý Nhân khẩu', icon: TeamIcon, href: '/residents' },
   { name: 'Quản lý Phương tiện', icon: TableIcon, href: '/vehicles' },
   { separator: true },
-  { name: 'Quản lý Khoản thu', icon: UiElementsIcon, href: '' },
-  { name: 'Quản lý Đợt thu', icon: ProductStockIcon, href: '' },
-  { name: 'Quản lý Các loại phí', icon: ProductStockIcon, href: '' },
+  { name: 'Quản lý Khoản thu', icon: UiElementsIcon, href: 'household-fee-assignments' },
+  { name: 'Quản lý Đợt thu', icon: ProductStockIcon, href: '/fee-campaigns' },
+  { name: 'Quản lý Các loại phí', icon: ProductStockIcon, href: '/fee-types' },
   { separator: true },
   { name: 'Đăng xuất', icon: LogoutIcon, action: 'logout' },
 ]

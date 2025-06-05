@@ -5,12 +5,12 @@ module.exports = (sequelize, DataTypes) => {
     class HouseholdFeeAssignment extends Model {
         static associate(models) {
             HouseholdFeeAssignment.belongsTo(models.FeeCampaign, {
-                foreignKey: "campaign_id",
+                foreignKey: "fee_campaign_id",
             });
             HouseholdFeeAssignment.belongsTo(models.Household, {
                 foreignKey: "household_id",
             });
-            HouseholdFeeAssignment.belongsTo(models.User, {
+            HouseholdFeeAssignment.belongsTo(models.Resident, {
                 foreignKey: "paid_by",
             });
         }
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            campaign_id: DataTypes.BIGINT,
+            fee_campaign_id: DataTypes.BIGINT,
             household_id: DataTypes.BIGINT,
             amount_due: DataTypes.DECIMAL(15, 2),
             amount_paid: DataTypes.DECIMAL(15, 2),

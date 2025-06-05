@@ -90,6 +90,7 @@
     @close="resetForm"
     @submit="handleSubmit"
     @update:visible="isModalVisible = $event"
+    class="big-modal"
   >
     <el-form
       ref="formRef"
