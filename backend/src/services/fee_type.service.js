@@ -59,7 +59,6 @@ exports.createFeeType = async (feeTypeData) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     } = feeTypeData;
@@ -68,7 +67,6 @@ exports.createFeeType = async (feeTypeData) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     });
@@ -88,7 +86,6 @@ exports.updateFeeType = async (id, feeTypeData) => {
             feeTypeData.is_mandatory !== undefined
                 ? feeTypeData.is_mandatory
                 : feeType.is_mandatory,
-        unit: feeTypeData.unit || feeType.unit,
         calculation_method:
             feeTypeData.calculation_method || feeType.calculation_method,
         default_amount: feeTypeData.default_amount || feeType.default_amount,

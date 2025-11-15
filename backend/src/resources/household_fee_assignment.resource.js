@@ -29,7 +29,6 @@ const householdFeeAssignmentResource = (householdFeeAssignment) => {
                     householdFeeAssignment.FeeCampaign.FeeType.description,
                 is_mandatory:
                     householdFeeAssignment.FeeCampaign.FeeType.is_mandatory,
-                unit: householdFeeAssignment.FeeCampaign.FeeType.unit,
                 calculation_method:
                     householdFeeAssignment.FeeCampaign.FeeType
                         .calculation_method,

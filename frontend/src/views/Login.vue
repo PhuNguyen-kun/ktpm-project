@@ -39,7 +39,7 @@
             </div>
           </el-form-item>
 
-          <div class="link-to-register">
+          <!-- <div class="link-to-register">
             Chưa có tài khoản?
             <router-link
               style="
@@ -51,7 +51,7 @@
               to="/register"
               >Đăng ký
             </router-link>
-          </div>
+          </div> -->
         </el-form>
       </div>
     </el-col>
@@ -209,6 +209,7 @@ const callback: CallbackTypes.TokenResponseCallback = async (response) => {
 
   &--logo {
     margin-bottom: 50px;
+    margin-top: 20px;
     width: auto !important;
     font-weight: 620;
   }

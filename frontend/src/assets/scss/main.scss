@@ -80,7 +80,7 @@ a {
   &__search-container {
     display: flex;
     align-items: center;
-    width: 450px;
+    width: 70%;
     gap: 5px;
   }
 
@@ -144,4 +144,22 @@ a {
 
 label {
   select: none;
+}
+
+.disabled-icon {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+
+  .divider {
+    width: 1px;
+    height: 20px;
+    background-color: #dcdfe6;
+    margin: 0 5px;
+  }
 }

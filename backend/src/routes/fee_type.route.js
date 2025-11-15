@@ -7,30 +7,18 @@ const {
     createFeeTypeRequest,
     updateFeeTypeRequest,
 } = require("../requests/FeeTypeRequest");
-const validate = require("../middlewares/handleValidation");
+// Removed validation middleware
 
 router.use(verifyToken);
 
-router.get("/", getFeeTypesRequest, validate, feeTypeController.getAllFeeTypes);
+router.get("/", getFeeTypesRequest, feeTypeController.getAllFeeTypes);
 
 router.get("/:id", feeTypeController.getFeeTypeById);
 
-router.post(
-    "/",
-    isLeader,
-    createFeeTypeRequest,
-    validate,
-    feeTypeController.createFeeType
-);
+router.post("/", createFeeTypeRequest, feeTypeController.createFeeType);
 
-router.put(
-    "/:id",
-    isLeader,
-    updateFeeTypeRequest,
-    validate,
-    feeTypeController.updateFeeType
-);
+router.put("/:id", updateFeeTypeRequest, feeTypeController.updateFeeType);
 
-router.delete("/:id", isLeader, feeTypeController.deleteFeeType);
+router.delete("/:id", feeTypeController.deleteFeeType);
 
 module.exports = router;

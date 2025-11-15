@@ -17,13 +17,9 @@ module.exports = (sequelize, DataTypes) => {
             fee_name: DataTypes.STRING,
             description: DataTypes.TEXT,
             is_mandatory: DataTypes.BOOLEAN,
-            unit: {
-                type: DataTypes.SMALLINT,
-                comment: "1 per_m2, 2 per_person, 3 per_vehicle",
-            },
             calculation_method: {
                 type: DataTypes.SMALLINT,
-                comment: "1 fixed, 2 per_m2, 3 per_capita",
+                comment: "1 fixed, 2 per_m2, 3 per_person, 4 per_vehicle",
             },
             default_amount: DataTypes.DECIMAL(15, 2),
         },

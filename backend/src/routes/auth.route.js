@@ -3,11 +3,11 @@ const router = express.Router();
 const authController = require("../controllers/auth.controller");
 const { verifyToken, isLeader } = require("../middlewares/auth.middleware");
 const { loginRequest } = require("../requests/LoginRequest");
-const validate = require("../middlewares/handleValidation");
+// Removed validation middleware
 
 // Public routes
 router.post("/register", authController.register);
-router.post("/login", loginRequest, validate, authController.login);
+router.post("/login", loginRequest, authController.login);
 router.post("/google", authController.googleAuth);
 
 // Protected routes

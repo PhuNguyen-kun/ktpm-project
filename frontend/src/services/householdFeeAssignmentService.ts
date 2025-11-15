@@ -68,3 +68,19 @@ export const deleteHouseholdFeeAssignment = async (id: number) => {
     throw error
   }
 }
+
+export const batchCreateHouseholdFeeAssignments = async (
+  fee_campaign_id: number,
+  household_ids?: number[],
+) => {
+  try {
+    const response = await axiosInstance.post('/household-fee-assignments/batch', {
+      fee_campaign_id,
+      household_ids: household_ids || [],
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error batch creating household fee assignments:', error)
+    throw error
+  }
+}

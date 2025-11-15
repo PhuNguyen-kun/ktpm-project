@@ -87,7 +87,6 @@ exports.createFeeType = asyncHandler(async (req, res) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     } = req.body;
@@ -96,7 +95,6 @@ exports.createFeeType = asyncHandler(async (req, res) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     });
@@ -114,7 +112,6 @@ exports.updateFeeType = asyncHandler(async (req, res) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     } = req.body;
@@ -124,7 +121,6 @@ exports.updateFeeType = asyncHandler(async (req, res) => {
         fee_name,
         description,
         is_mandatory,
-        unit,
         calculation_method,
         default_amount,
     });

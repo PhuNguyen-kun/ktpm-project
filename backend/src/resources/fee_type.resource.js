@@ -4,7 +4,6 @@ const feeTypeResource = (feeType) => {
         fee_name: feeType.fee_name,
         description: feeType.description,
         is_mandatory: feeType.is_mandatory,
-        unit: feeType.unit,
         calculation_method: feeType.calculation_method,
         default_amount: feeType.default_amount,
         created_at: feeType.created_at,

@@ -7,35 +7,18 @@ const {
     createFeeCampaignRequest,
     updateFeeCampaignRequest,
 } = require("../requests/FeeCampaignRequest");
-const validate = require("../middlewares/handleValidation");
+// Validation middleware removed
 
 router.use(verifyToken);
 
-router.get(
-    "/",
-    getFeeCampaignsRequest,
-    validate,
-    feeCampaignController.getAllFeeCampaigns
-);
+router.get("/", feeCampaignController.getAllFeeCampaigns);
 
 router.get("/:id", feeCampaignController.getFeeCampaignById);
 
-router.post(
-    "/",
-    isLeader,
-    createFeeCampaignRequest,
-    validate,
-    feeCampaignController.createFeeCampaign
-);
+router.post("/", feeCampaignController.createFeeCampaign);
 
-router.put(
-    "/:id",
-    isLeader,
-    updateFeeCampaignRequest,
-    validate,
-    feeCampaignController.updateFeeCampaign
-);
+router.put("/:id", feeCampaignController.updateFeeCampaign);
 
-router.delete("/:id", isLeader, feeCampaignController.deleteFeeCampaign);
+router.delete("/:id", feeCampaignController.deleteFeeCampaign);
 
 module.exports = router;

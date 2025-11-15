@@ -15,7 +15,6 @@ const feeCampaignResource = (feeCampaign) => {
             fee_name: feeCampaign.FeeType.fee_name,
             description: feeCampaign.FeeType.description,
             is_mandatory: feeCampaign.FeeType.is_mandatory,
-            unit: feeCampaign.FeeType.unit,
             calculation_method: feeCampaign.FeeType.calculation_method,
             default_amount: feeCampaign.FeeType.default_amount,
         };

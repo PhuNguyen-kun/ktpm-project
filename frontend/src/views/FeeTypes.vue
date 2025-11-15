@@ -21,20 +21,41 @@
         <el-option :value="true" label="Bắt buộc" />
         <el-option :value="false" label="Không bắt buộc" />
       </el-select>
-      <el-button class="btn btn--primary" @click="handleSearch">
+      <Button class="btn btn--primary" @click="handleSearch">
         <el-icon>
           <Search />
         </el-icon>
-      </el-button>
+      </Button>
     </div>
     <div class="admin-page__heading--right">
-      <Button v-if="selectedRows.length" class="btn btn--danger" @click="openDeleteSelectedConfirm">
+      <Button
+        v-if="selectedRows.length && canModify"
+        class="btn btn--danger"
+        @click="openDeleteSelectedConfirm"
+      >
         <el-icon class="btn--nicer">
           <Delete />
         </el-icon>
         <span>Xóa các mục đã chọn</span>
       </Button>
-      <Button class="btn btn--primary" @click="openCreateModal">
+      <el-tooltip
+        v-if="!canModify"
+        content="Chỉ kế toán mới có thể thêm"
+        placement="top"
+        effect="light"
+      >
+        <Button
+          class="btn btn--primary disabled-icon"
+          @click="openCreateModal"
+          :disabled="!canModify"
+        >
+          <el-icon class="btn--nicer" style="margin-top: -3px">
+            <Plus />
+          </el-icon>
+          <span>Thêm loại phí</span>
+        </Button>
+      </el-tooltip>
+      <Button v-else class="btn btn--primary" @click="openCreateModal">
         <el-icon class="btn--nicer" style="margin-top: -3px">
           <Plus />
         </el-icon>
@@ -66,15 +87,38 @@
       <span v-if="row.calculation_method === 1">Cố định</span>
       <span v-else-if="row.calculation_method === 2">Theo m²</span>
       <span v-else-if="row.calculation_method === 3">Theo đầu người</span>
+      <span v-else-if="row.calculation_method === 4">Theo phương tiện</span>
     </template>
 
     <template #actions="{ row }">
       <div class="action-buttons">
-        <el-button link size="small" type="primary" @click="openEditModal(row)">
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ kế toán mới có thể chỉnh sửa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="primary" :disabled="!canModify">
+            <img alt="Edit" src="@/assets/img/edit.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="primary" @click="openEditModal(row)">
           <img alt="Edit" src="@/assets/img/edit.svg" />
         </el-button>
+
         <div class="divider"></div>
-        <el-button link size="small" type="danger" @click="openDeleteConfirm(row.id)">
+
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ kế toán mới có thể xóa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="danger" :disabled="!canModify">
+            <img alt="Delete" src="@/assets/img/delete.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="danger" @click="openDeleteConfirm(row.id)">
           <img alt="Delete" src="@/assets/img/delete.svg" />
         </el-button>
       </div>
@@ -132,25 +176,18 @@
       <el-form-item label="Loại phí bắt buộc" prop="is_mandatory">
         <el-switch v-model="feeType.is_mandatory" />
       </el-form-item>
-      <el-form-item label="Đơn vị tính" prop="unit">
-        <el-select v-model="feeType.unit" placeholder="Chọn đơn vị tính">
-          <el-option :value="1" label="Theo m²" />
-          <el-option :value="2" label="Theo người" />
-          <el-option :value="3" label="Theo phương tiện" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="Phương thức tính" prop="calculation_method">
         <el-select v-model="feeType.calculation_method" placeholder="Chọn phương thức tính">
           <el-option :value="1" label="Cố định" />
           <el-option :value="2" label="Theo m²" />
           <el-option :value="3" label="Theo đầu người" />
+          <el-option :value="4" label="Theo phương tiện" />
         </el-select>
       </el-form-item>
       <el-form-item label="Mức phí mặc định" prop="default_amount">
         <el-input-number
           v-model="feeType.default_amount"
           :min="0"
-          :precision="2"
           :step="1000"
           style="width: 100%"
           placeholder="Nhập mức phí mặc định"
@@ -167,8 +204,9 @@
 
 <script setup lang="ts">
 import Table from '@/components/Table.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import { useFeeTypeStore } from '@/stores/feeTypeStore'
+import { useAuthStore } from '@/stores/authStore'
 import Pagination from '@/components/Pagination.vue'
 import Modal from '@/components/Modal.vue'
 import { Search, Delete, Plus } from '@element-plus/icons-vue'
@@ -178,7 +216,12 @@ import type { FeeType } from '@/types/fee_type'
 import ts from 'typescript'
 
 const feeTypeStore = useFeeTypeStore()
+const authStore = useAuthStore()
 const fetchLoading = ref<boolean>(false)
+
+const isAccountant = computed(() => authStore.userInfo?.role === 2)
+const isLeader = computed(() => authStore.userInfo?.role === 1)
+const canModify = computed(() => isAccountant.value)
 
 const handleSearch = async () => {
   feeTypeStore.pagination.current_page = 1
@@ -303,12 +346,6 @@ const columns = ref<IColumn[]>([
     type: 'string',
   },
   {
-    prop: 'unit',
-    label: 'Đơn vị tính',
-    width: 120,
-    type: 'string',
-  },
-  {
     prop: 'calculation_method',
     label: 'Phương thức tính',
     width: 130,
@@ -345,13 +382,8 @@ const formRules = {
     { min: 2, max: 255, message: 'Tên loại phí phải từ 2 đến 255 ký tự', trigger: 'blur' },
   ],
   description: [{ max: 1000, message: 'Mô tả không được vượt quá 1000 ký tự', trigger: 'blur' }],
-  unit: [{ required: true, message: 'Vui lòng chọn đơn vị tính', trigger: 'change' }],
   calculation_method: [
     { required: true, message: 'Vui lòng chọn phương thức tính', trigger: 'change' },
-  ],
-  default_amount: [
-    { required: true, message: 'Vui lòng nhập mức phí mặc định', trigger: 'blur' },
-    { type: 'number', min: 0, message: 'Mức phí phải là số dương', trigger: 'blur' },
   ],
 }
 
@@ -382,5 +414,9 @@ onMounted(() => {
 
 .btn--primary {
   margin-left: 20px;
+}
+
+:deep(.el-select) {
+  margin-left: 0 !important;
 }
 </style>

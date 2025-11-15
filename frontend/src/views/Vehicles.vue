@@ -50,7 +50,24 @@
         </el-icon>
         <span>Xóa các mục đã chọn</span>
       </Button>
-      <Button class="btn btn--primary" @click="openCreateModal">
+      <el-tooltip
+        v-if="!canModify"
+        content="Chỉ tổ trưởng/tổ phó mới có thể thêm"
+        placement="top"
+        effect="light"
+      >
+        <Button
+          class="btn btn--primary disabled-icon"
+          @click="openCreateModal"
+          :disabled="!canModify"
+        >
+          <el-icon class="btn--nicer" style="margin-top: -3px">
+            <Plus />
+          </el-icon>
+          <span>Thêm phương tiện</span>
+        </Button>
+      </el-tooltip>
+      <Button v-else class="btn btn--primary" @click="openCreateModal">
         <el-icon class="btn--nicer" style="margin-top: -3px">
           <Plus />
         </el-icon>
@@ -66,8 +83,8 @@
     @selection-change="handleSelectionChange"
   >
     <template #type="{ row }">
-      <el-tag v-if="row.type === 1" type="success">Xe máy</el-tag>
-      <el-tag v-else-if="row.type === 2" type="warning">Ô tô</el-tag>
+      <el-tag v-if="row.type === 1" type="success" effect="dark">Xe máy</el-tag>
+      <el-tag v-else-if="row.type === 2" type="primary" effect="dark">Ô tô</el-tag>
       <span v-else>-</span>
     </template>
 
@@ -80,11 +97,33 @@
 
     <template #actions="{ row }">
       <div class="action-buttons">
-        <el-button link size="small" type="primary" @click="openEditModal(row)">
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể chỉnh sửa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="primary" :disabled="!canModify">
+            <img alt="Edit" src="@/assets/img/edit.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="primary" @click="openEditModal(row)">
           <img alt="Edit" src="@/assets/img/edit.svg" />
         </el-button>
+
         <div class="divider"></div>
-        <el-button link size="small" type="danger" @click="openDeleteConfirm(row.id)">
+
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể xóa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="danger" :disabled="!canModify">
+            <img alt="Delete" src="@/assets/img/delete.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="danger" @click="openDeleteConfirm(row.id)">
           <img alt="Delete" src="@/assets/img/delete.svg" />
         </el-button>
       </div>
@@ -169,7 +208,8 @@
 
 <script setup lang="ts">
 import Table from '@/components/Table.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
 import { useVehicleStore } from '@/stores/vehicleStore'
 import { useHouseholdStore } from '@/stores/householdStore'
 import Pagination from '@/components/Pagination.vue'
@@ -181,8 +221,13 @@ import type { Vehicle } from '@/types/vehicle'
 import { notifyError } from '@/composables/notifications'
 
 const vehicleStore = useVehicleStore()
+const authStore = useAuthStore()
 const householdStore = useHouseholdStore()
 const fetchLoading = ref<boolean>(false)
+
+const isAccountant = computed(() => authStore.userInfo?.role === 2)
+const isLeader = computed(() => authStore.userInfo?.role === 1)
+const canModify = computed(() => isLeader.value)
 
 const handleSearch = async () => {
   vehicleStore.pagination.current_page = 1
@@ -380,8 +425,10 @@ onMounted(async () => {
   margin: 0 8px;
 }
 
-:deep(.el-select__wrapper) {
-  height: 36.3px;
-  width: 250px;
+.admin-page__filters {
+  :deep(.el-select__wrapper) {
+    height: 36.3px;
+    width: 250px;
+  }
 }
 </style>

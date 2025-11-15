@@ -89,7 +89,7 @@ const handleSubmit = () => {
 .el-dialog {
   display: flex;
   flex-direction: column;
-  max-height: 90vh;
+  max-height: auto;
   overflow: hidden;
 
   &__header,

@@ -109,11 +109,13 @@ exports.getHouseholdById = async (id) => {
  * @returns {Promise<Object>} - Created household
  */
 exports.createHousehold = async (householdData) => {
-    const { owner_name, apartment_code, address, phone_number } = householdData;
+    const { owner_name, apartment_code, floor_area, address, phone_number } =
+        householdData;
 
     return await Household.create({
         owner_name,
         apartment_code,
+        floor_area,
         address,
         phone_number,
     });
@@ -137,6 +139,7 @@ exports.updateHousehold = async (id, householdData) => {
         owner_name: householdData.owner_name || household.owner_name,
         apartment_code:
             householdData.apartment_code || household.apartment_code,
+        floor_area: householdData.floor_area || household.floor_area,
         address: householdData.address || household.address,
         phone_number: householdData.phone_number || household.phone_number,
     });

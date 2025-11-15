@@ -23,7 +23,6 @@ export const useResidentStore = defineStore('resident', () => {
     pagination.current_page = page
     fetchResidents()
   }
-
   const fetchResidents = async () => {
     try {
       loading.value = true
@@ -34,8 +33,8 @@ export const useResidentStore = defineStore('resident', () => {
         trimmedSearch.length > 0 ? trimmedSearch : null,
         pagination.current_page,
         pagination.per_page,
-        householdId.value,
-        status.value,
+        householdId.value ? Number(householdId.value) : null,
+        status.value ? Number(status.value) : null,
       )
 
       residents.value = response.data

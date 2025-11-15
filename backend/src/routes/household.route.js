@@ -7,16 +7,11 @@ const {
     createHouseholdRequest,
     updateHouseholdRequest,
 } = require("../requests/HouseholdRequest");
-const validate = require("../middlewares/handleValidation");
+// Removed validation middleware
 
 router.use(verifyToken);
 
-router.get(
-    "/",
-    getHouseholdsRequest,
-    validate,
-    householdController.getAllHouseholds
-);
+router.get("/", getHouseholdsRequest, householdController.getAllHouseholds);
 
 router.get("/:id", householdController.getHouseholdById);
 
@@ -24,7 +19,6 @@ router.post(
     "/",
     isLeader,
     createHouseholdRequest,
-    validate,
     householdController.createHousehold
 );
 
@@ -32,7 +26,6 @@ router.put(
     "/:id",
     isLeader,
     updateHouseholdRequest,
-    validate,
     householdController.updateHousehold
 );
 

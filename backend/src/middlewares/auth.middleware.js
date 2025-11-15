@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../config/auth.config");
 const { responseOk, responseError } = require("../utils/apiResponse");
 const db = require("../../models");
-const JWT_SECRET = process.env.JWT_SECRET;
 
+// Use authConfig.secret instead of process.env.JWT_SECRET
 console.log("Available models:", Object.keys(db));
 
 exports.verifyToken = (req, res, next) => {
@@ -18,7 +18,7 @@ exports.verifyToken = (req, res, next) => {
             return responseError(res, "Token missing", 401);
         }
 
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, authConfig.secret, (err, decoded) => {
             if (err) {
                 return res.status(401).json({
                     message: "Unauthorized: Invalid or expired token.",

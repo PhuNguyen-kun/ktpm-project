@@ -101,10 +101,39 @@ export const useHouseholdFeeAssignmentStore = defineStore('householdFeeAssignmen
       for (const id of ids) {
         await householdFeeAssignmentService.deleteHouseholdFeeAssignment(id)
       }
-      notifySuccess('Đã xóa thu phí hộ gia đình được chọn')
-      await fetchHouseholdFeeAssignments()
+      notifySuccess(`Xóa ${ids.length} thu phí hộ gia đình thành công`)
+      fetchHouseholdFeeAssignments()
     } catch (error) {
-      notifyError('Lỗi khi xóa thu phí hộ gia đình đã chọn')
+      notifyError('Lỗi khi xóa thu phí hộ gia đình')
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * Batch creates household fee assignments based on fee campaign and optional list of household IDs
+   * If household_ids is empty, all households will be assigned
+   */
+  const batchCreateHouseholdFeeAssignments = async (
+    fee_campaign_id: number,
+    household_ids?: number[],
+  ) => {
+    try {
+      loading.value = true
+      const response = await householdFeeAssignmentService.batchCreateHouseholdFeeAssignments(
+        fee_campaign_id,
+        household_ids,
+      )
+
+      const count = response.data.count
+      notifySuccess(`Đã tạo thành công ${count} khoản thu`)
+      await fetchHouseholdFeeAssignments()
+      return response
+    } catch (error) {
+      notifyError('Lỗi khi tạo khoản thu hàng loạt')
+      console.error(error)
+      throw error
     } finally {
       loading.value = false
     }
@@ -134,6 +163,7 @@ export const useHouseholdFeeAssignmentStore = defineStore('householdFeeAssignmen
     updateHouseholdFeeAssignment,
     deleteHouseholdFeeAssignment,
     deleteSelected,
+    batchCreateHouseholdFeeAssignments,
     resetFilters,
   }
 })

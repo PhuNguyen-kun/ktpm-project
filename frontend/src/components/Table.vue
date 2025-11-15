@@ -6,6 +6,7 @@
     class="table-checkbox custom-table"
     v-loading="loading"
     empty-text="Không có bản ghi nào"
+    :row-class-name="rowClassName"
   >
     <el-table-column
       type="selection"
@@ -76,6 +77,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  rowClassName: {
+    type: Function as PropType<(param: { row: any; rowIndex: number }) => string>,
+    default: () => '',
+  },
 })
 
 const stripHtml = (html: string) => {
@@ -122,6 +127,7 @@ const selectable = (row: Record<string, any>, index: number) => {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }

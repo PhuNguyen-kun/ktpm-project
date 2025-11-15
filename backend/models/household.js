@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             owner_name: DataTypes.STRING,
             apartment_code: DataTypes.STRING,
+            floor_area: DataTypes.DECIMAL(10, 2),
             address: DataTypes.STRING,
             phone_number: DataTypes.STRING,
         },

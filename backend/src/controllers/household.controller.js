@@ -64,11 +64,13 @@ exports.getHouseholdById = asyncHandler(async (req, res) => {
  * Create a new household
  */
 exports.createHousehold = asyncHandler(async (req, res) => {
-    const { owner_name, apartment_code, address, phone_number } = req.body;
+    const { owner_name, apartment_code, floor_area, address, phone_number } =
+        req.body;
 
     const household = await householdService.createHousehold({
         owner_name,
         apartment_code,
+        floor_area,
         address,
         phone_number,
     });

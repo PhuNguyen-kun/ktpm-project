@@ -7,11 +7,11 @@ const {
     createVehicleRequest,
     updateVehicleRequest,
 } = require("../requests/VehicleRequest");
-const validate = require("../middlewares/handleValidation");
+// Removed validation middleware
 
 router.use(verifyToken);
 
-router.get("/", getVehiclesRequest, validate, vehicleController.getAllVehicles);
+router.get("/", getVehiclesRequest, vehicleController.getAllVehicles);
 
 router.get("/:id", vehicleController.getVehicleById);
 
@@ -19,7 +19,6 @@ router.post(
     "/",
     isLeader,
     createVehicleRequest,
-    validate,
     vehicleController.createVehicle
 );
 
@@ -27,7 +26,6 @@ router.put(
     "/:id",
     isLeader,
     updateVehicleRequest,
-    validate,
     vehicleController.updateVehicle
 );
 

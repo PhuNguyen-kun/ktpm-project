@@ -17,6 +17,10 @@ module.exports = {
                 type: Sequelize.STRING(100),
                 allowNull: true,
             },
+            floor_area: {
+                type: Sequelize.DECIMAL(10, 2),
+                allowNull: true,
+            },
             address: {
                 type: Sequelize.STRING(255),
                 allowNull: true,
@@ -184,18 +188,13 @@ module.exports = {
                 allowNull: false,
                 defaultValue: false,
             },
-            unit: {
-                type: Sequelize.SMALLINT,
-                allowNull: false,
-                comment: "1 per_m2, 2 per_person, 3 per_vehicle",
-            },
             calculation_method: {
                 type: Sequelize.SMALLINT,
                 allowNull: false,
-                comment: "1 fixed, 2 per_m2, 3 per_capita",
+                comment: "1: fixed, 2: per_m2, 3: per_person, 4: per_vehicle",
             },
             default_amount: {
-                type: Sequelize.DECIMAL(15, 2),
+                type: Sequelize.DECIMAL(15, 0),
                 allowNull: false,
                 defaultValue: 0,
             },
@@ -277,11 +276,11 @@ module.exports = {
                 onDelete: "CASCADE",
             },
             amount_due: {
-                type: Sequelize.DECIMAL(15, 2),
+                type: Sequelize.DECIMAL(15, 0),
                 allowNull: false,
             },
             amount_paid: {
-                type: Sequelize.DECIMAL(15, 2),
+                type: Sequelize.DECIMAL(15, 0),
                 allowNull: false,
                 defaultValue: 0,
             },
@@ -383,7 +382,7 @@ module.exports = {
                 allowNull: false,
             },
             amount: {
-                type: Sequelize.DECIMAL(15, 2),
+                type: Sequelize.DECIMAL(15, 0),
                 allowNull: false,
             },
             paid: {

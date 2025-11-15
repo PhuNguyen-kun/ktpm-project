@@ -2,7 +2,7 @@
   <h1 class="admin-page__title">Quản lý Nhân khẩu</h1>
 
   <div class="admin-page__heading">
-    <div class="admin-page__search-container" style="width: 700px">
+    <div class="admin-page__search-container" style="width: 75%">
       <el-input
         v-model="residentStore.search"
         class="admin-page__search-input"
@@ -10,6 +10,34 @@
         placeholder="Tìm kiếm theo tên, số CMND/CCCD, số điện thoại"
         @change="handleSearch"
       />
+
+      <div class="admin-page__filters">
+        <el-select
+          v-model="residentStore.status"
+          placeholder="Lọc theo trạng thái"
+          clearable
+          class="admin-page__filter-select"
+          @change="handleSearch"
+        >
+          <el-option label="Thường trú" :value="1" />
+          <el-option label="Tạm trú" :value="2" />
+          <el-option label="Đã chuyển đi" :value="3" />
+        </el-select>
+        <el-select
+          v-model="residentStore.householdId"
+          placeholder="Chọn hộ gia đình"
+          clearable
+          class="admin-page__filter-select-household"
+          @change="handleSearch"
+        >
+          <el-option
+            v-for="household in householdOptions"
+            :key="household.value"
+            :label="household.label"
+            :value="household.value"
+          />
+        </el-select>
+      </div>
 
       <Button class="btn btn--primary" @click="handleSearch">
         <el-icon>
@@ -34,7 +62,24 @@
         </el-icon>
         <span>Khôi phục các mục đã chọn</span>
       </Button> -->
-      <Button class="btn btn--primary" @click="openCreateModal">
+      <el-tooltip
+        v-if="!canModify"
+        content="Chỉ tổ trưởng/tổ phó mới có thể thêm"
+        placement="top"
+        effect="light"
+      >
+        <Button
+          class="btn btn--primary disabled-icon"
+          @click="openCreateModal"
+          :disabled="!canModify"
+        >
+          <el-icon class="btn--nicer" style="margin-top: -3px">
+            <Plus />
+          </el-icon>
+          <span>Thêm nhân khẩu</span>
+        </Button>
+      </el-tooltip>
+      <Button v-else class="btn btn--primary" @click="openCreateModal">
         <el-icon class="btn--nicer" style="margin-top: -3px">
           <Plus />
         </el-icon>
@@ -47,6 +92,7 @@
     :columns="columns"
     :data="residentStore.residents"
     :loading="fetchLoading"
+    :row-class-name="tableRowClassName"
     @selection-change="handleSelectionChange"
   >
     <template #household_apartment_code="{ row }">
@@ -69,11 +115,33 @@
 
     <template #actions="{ row }">
       <div class="action-buttons">
-        <el-button link size="small" type="primary" @click="openEditModal(row)">
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể chỉnh sửa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="primary" :disabled="!canModify">
+            <img alt="Edit" src="@/assets/img/edit.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="primary" @click="openEditModal(row)">
           <img alt="Edit" src="@/assets/img/edit.svg" />
         </el-button>
+
         <div class="divider"></div>
-        <el-button link size="small" type="danger" @click="openDeleteConfirm(row.id)">
+
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể xóa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="danger" :disabled="!canModify">
+            <img alt="Delete" src="@/assets/img/delete.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="danger" @click="openDeleteConfirm(row.id)">
           <img alt="Delete" src="@/assets/img/delete.svg" />
         </el-button>
       </div>
@@ -231,8 +299,9 @@
 
 <script setup lang="ts">
 import Table from '@/components/Table.vue'
-import { ref, onMounted, watch, reactive } from 'vue'
+import { ref, onMounted, watch, reactive, computed } from 'vue'
 import { useResidentStore } from '@/stores/residentStore'
+import { useAuthStore } from '@/stores/authStore'
 import Pagination from '@/components/Pagination.vue'
 import Modal from '@/components/Modal.vue'
 import type { FormInstance } from 'element-plus'
@@ -242,11 +311,17 @@ import { useHouseholdStore } from '@/stores/householdStore'
 
 const residentStore = useResidentStore()
 const householdStore = useHouseholdStore()
+const authStore = useAuthStore()
 const fetchLoading = ref<boolean>(false)
+
+const isAccountant = computed(() => authStore.userInfo?.role === 2)
+const isLeader = computed(() => authStore.userInfo?.role === 1)
+const canModify = computed(() => isLeader.value)
 
 const handleSearch = async () => {
   residentStore.pagination.current_page = 1
   await residentStore.fetchResidents()
+  console.log('Filtering with household ID:', residentStore.householdId)
 }
 
 const resident = reactive({
@@ -293,6 +368,10 @@ const getGenderLabel = (gender: number) => {
     return 'Nữ'
   }
   return 'Khác'
+}
+
+const tableRowClassName = ({ row }: { row: any }) => {
+  return row.status === 3 ? 'inactive-row' : ''
 }
 
 const householdOptions = ref<{ value: number; label: string }[]>([])
@@ -541,6 +620,39 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 :deep(.el-dialog__body) {
-  overflow-x: hidden;
+  overflow-y: hidden !important;
+}
+
+.admin-page__filters {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.admin-page__filter-select {
+  height: 36.5px;
+  width: 180px;
+  :deep(.el-select__wrapper) {
+    height: 36.5px;
+    width: 180px;
+  }
+}
+
+.admin-page__filter-select-household {
+  height: 36.5px;
+  width: 250px;
+  :deep(.el-select__wrapper) {
+    height: 36.5px;
+    width: 250px;
+  }
+}
+
+.admin-page__search-input {
+  width: 350px;
+}
+
+:deep(.inactive-row) {
+  background-color: #f5f5f5;
+  color: #c7c7c7;
 }
 </style>

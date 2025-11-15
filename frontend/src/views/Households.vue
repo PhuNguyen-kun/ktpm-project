@@ -34,7 +34,24 @@
         </el-icon>
         <span>Khôi phục các mục đã chọn</span>
       </Button> -->
-      <Button class="btn btn--primary" @click="openCreateModal">
+      <el-tooltip
+        v-if="!canModify"
+        content="Chỉ tổ trưởng/tổ phó mới có thể thêm"
+        placement="top"
+        effect="light"
+      >
+        <Button
+          class="btn btn--primary disabled-icon"
+          @click="openCreateModal"
+          :disabled="!canModify"
+        >
+          <el-icon class="btn--nicer" style="margin-top: -3px">
+            <Plus />
+          </el-icon>
+          <span>Thêm hộ gia đình</span>
+        </Button>
+      </el-tooltip>
+      <Button v-else class="btn btn--primary" @click="openCreateModal">
         <el-icon class="btn--nicer" style="margin-top: -3px">
           <Plus />
         </el-icon>
@@ -51,11 +68,33 @@
   >
     <template #actions="{ row }">
       <div class="action-buttons">
-        <el-button link size="small" type="primary" @click="openEditModal(row)">
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể chỉnh sửa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="primary" :disabled="!canModify">
+            <img alt="Edit" src="@/assets/img/edit.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="primary" @click="openEditModal(row)">
           <img alt="Edit" src="@/assets/img/edit.svg" />
         </el-button>
+
         <div class="divider"></div>
-        <el-button link size="small" type="danger" @click="openDeleteConfirm(row.id)">
+
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ tổ trưởng/tổ phó mới có thể xóa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="danger" :disabled="!canModify">
+            <img alt="Delete" src="@/assets/img/delete.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="danger" @click="openDeleteConfirm(row.id)">
           <img alt="Delete" src="@/assets/img/delete.svg" />
         </el-button>
       </div>
@@ -105,6 +144,14 @@
       <el-form-item label="Mã căn hộ" prop="apartment_code">
         <el-input v-model="household.apartment_code" placeholder="Nhập mã căn hộ"></el-input>
       </el-form-item>
+      <el-form-item label="Diện tích (m2)" prop="floor_area">
+        <el-input-number
+          v-model="household.floor_area"
+          placeholder="Nhập diện tích căn hộ"
+          type="number"
+          min="0"
+        ></el-input-number>
+      </el-form-item>
       <el-form-item label="Địa chỉ" prop="address">
         <el-input
           v-model="household.address"
@@ -127,8 +174,9 @@
 
 <script setup lang="ts">
 import Table from '@/components/Table.vue'
-import { ref, onMounted, watch, reactive } from 'vue'
+import { ref, onMounted, watch, reactive, computed } from 'vue'
 import { useHouseholdStore } from '@/stores/householdStore'
+import { useAuthStore } from '@/stores/authStore'
 import Pagination from '@/components/Pagination.vue'
 import Modal from '@/components/Modal.vue'
 import type { FormInstance } from 'element-plus'
@@ -136,7 +184,12 @@ import type { IColumn } from '@/components/Table.vue'
 import type { Household } from '@/types/household'
 
 const householdStore = useHouseholdStore()
+const authStore = useAuthStore()
 const fetchLoading = ref<boolean>(false)
+
+const isAccountant = computed(() => authStore.userInfo?.role === 2)
+const isLeader = computed(() => authStore.userInfo?.role === 1)
+const canModify = computed(() => isLeader.value)
 
 const handleSearch = async () => {
   householdStore.pagination.current_page = 1
@@ -147,6 +200,7 @@ const household = reactive({
   id: '',
   owner_name: '',
   apartment_code: '',
+  floor_area: '',
   address: '',
   phone_number: '',
 })
@@ -199,6 +253,7 @@ const resetForm = () => {
     id: '',
     owner_name: '',
     apartment_code: '',
+    floor_area: '',
     address: '',
     phone_number: '',
   })
@@ -220,6 +275,7 @@ const openEditModal = (selectedHousehold: Household) => {
     id: selectedHousehold.id,
     owner_name: selectedHousehold.owner_name,
     apartment_code: selectedHousehold.apartment_code,
+    floor_area: selectedHousehold.floor_area,
     address: selectedHousehold.address,
     phone_number: selectedHousehold.phone_number,
   })
@@ -254,20 +310,27 @@ const columns = ref<IColumn[]>([
   {
     prop: 'apartment_code',
     label: 'Mã căn hộ',
-    width: 150,
+    width: 80,
     type: 'string',
     fixed: 'left',
   },
   {
-    prop: 'address',
-    label: 'Địa chỉ',
-    width: 300,
+    prop: 'floor_area',
+    label: 'Diện tích (m2)',
+    width: 170,
     type: 'string',
+    align: 'center',
   },
   {
     prop: 'phone_number',
     label: 'Số điện thoại',
     width: 150,
+    type: 'string',
+  },
+  {
+    prop: 'address',
+    label: 'Địa chỉ',
+    width: 220,
     type: 'string',
   },
   {

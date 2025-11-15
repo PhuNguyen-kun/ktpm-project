@@ -6,42 +6,33 @@ const {
     getHouseholdFeeAssignmentsRequest,
     createHouseholdFeeAssignmentRequest,
     updateHouseholdFeeAssignmentRequest,
+    batchCreateHouseholdFeeAssignmentRequest,
 } = require("../requests/HouseholdFeeAssignmentRequest");
-const validate = require("../middlewares/handleValidation");
+// Validation middleware removed
 
 router.use(verifyToken);
 
-router.get(
-    "/",
-    getHouseholdFeeAssignmentsRequest,
-    validate,
-    householdFeeAssignmentController.getAllHouseholdFeeAssignments
-);
+router.get("/", householdFeeAssignmentController.getAllHouseholdFeeAssignments);
 
 router.get(
     "/:id",
     householdFeeAssignmentController.getHouseholdFeeAssignmentById
 );
 
+router.post("/", householdFeeAssignmentController.createHouseholdFeeAssignment);
+
 router.post(
-    "/",
-    isLeader,
-    createHouseholdFeeAssignmentRequest,
-    validate,
-    householdFeeAssignmentController.createHouseholdFeeAssignment
+    "/batch",
+    householdFeeAssignmentController.batchCreateHouseholdFeeAssignments
 );
 
 router.put(
     "/:id",
-    isLeader,
-    updateHouseholdFeeAssignmentRequest,
-    validate,
     householdFeeAssignmentController.updateHouseholdFeeAssignment
 );
 
 router.delete(
     "/:id",
-    isLeader,
     householdFeeAssignmentController.deleteHouseholdFeeAssignment
 );
 

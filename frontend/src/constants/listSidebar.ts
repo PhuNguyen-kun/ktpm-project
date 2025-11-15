@@ -16,14 +16,14 @@ import TableIcon from '@/assets/img/table.svg'
 import LogoutIcon from '@/assets/img/logout.svg'
 
 export const menuItems: MenuItems[] = [
-  { name: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
+  // { name: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
   { name: 'Quản lý Hộ gia đình', icon: ContactIcon, href: '/households' },
   { name: 'Quản lý Nhân khẩu', icon: TeamIcon, href: '/residents' },
   { name: 'Quản lý Phương tiện', icon: TableIcon, href: '/vehicles' },
   { separator: true },
-  { name: 'Quản lý Khoản thu', icon: UiElementsIcon, href: 'household-fee-assignments' },
-  { name: 'Quản lý Đợt thu', icon: ProductStockIcon, href: '/fee-campaigns' },
   { name: 'Quản lý Các loại phí', icon: ProductStockIcon, href: '/fee-types' },
+  { name: 'Quản lý Đợt thu', icon: ProductStockIcon, href: '/fee-campaigns' },
+  { name: 'Quản lý Thu phí', icon: UiElementsIcon, href: 'household-fee-assignments' },
   { separator: true },
   { name: 'Đăng xuất', icon: LogoutIcon, action: 'logout' },
 ]

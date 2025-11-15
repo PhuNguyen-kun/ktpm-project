@@ -174,8 +174,47 @@ exports.deleteHouseholdFeeAssignment = asyncHandler(async (req, res) => {
 
     return responseOk(
         res,
-        null,
+        { id },
         "Household fee assignment deleted successfully",
         200
     );
+});
+
+/**
+ * Batch create household fee assignments based on fee campaign and selected households
+ * This controller allows creating assignments for all households or specific ones
+ * and automatically calculates the fee amount based on calculation method
+ */
+exports.batchCreateHouseholdFeeAssignments = asyncHandler(async (req, res) => {
+    const { fee_campaign_id, household_ids } = req.body;
+
+    try {
+        const result =
+            await householdFeeAssignmentService.batchCreateHouseholdFeeAssignments(
+                {
+                    fee_campaign_id,
+                    household_ids,
+                }
+            );
+
+        const formattedAssignments = result.data.map((assignment) =>
+            householdFeeAssignmentResource(assignment)
+        );
+
+        return responseOk(
+            res,
+            {
+                count: result.count,
+                data: formattedAssignments,
+            },
+            `Successfully created ${result.count} fee assignments`,
+            201
+        );
+    } catch (error) {
+        return responseError(
+            res,
+            `Failed to create fee assignments: ${error.message}`,
+            400
+        );
+    }
 });

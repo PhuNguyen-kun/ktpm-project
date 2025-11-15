@@ -1,6 +1,9 @@
 <template>
   <router-link to="/dashboard" class="logo-container">
-    <img src="@/assets/img/admin-page-logo.svg" alt="" class="logo" />
+    <!-- <img src="@/assets/img/admin-page-logo.svg" alt="" class="logo" /> -->
+    <p class="logo-text">
+      <span class="logo-text__first">Blue</span><span class="logo-text__second">Moon</span>
+    </p>
   </router-link>
 
   <div class="el-header__action">
@@ -199,5 +202,22 @@ onMounted(async () => {
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__first {
+    color: #007bff;
+  }
+
+  &__second {
+    color: #000;
+  }
 }
 </style>

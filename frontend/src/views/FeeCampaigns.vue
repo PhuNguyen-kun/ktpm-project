@@ -58,7 +58,24 @@
         </el-icon>
         <span>Xóa các mục đã chọn</span>
       </Button>
-      <Button class="btn btn--primary" @click="openCreateModal">
+      <el-tooltip
+        v-if="!canModify"
+        content="Chỉ kế toán mới có thể thêm"
+        placement="top"
+        effect="light"
+      >
+        <Button
+          class="btn btn--primary disabled-icon"
+          @click="openCreateModal"
+          :disabled="!canModify"
+        >
+          <el-icon class="btn--nicer" style="margin-top: -3px">
+            <Plus />
+          </el-icon>
+          <span>Thêm đợt thu</span>
+        </Button>
+      </el-tooltip>
+      <Button v-else class="btn btn--primary" @click="openCreateModal">
         <el-icon class="btn--nicer" style="margin-top: -3px">
           <Plus />
         </el-icon>
@@ -79,11 +96,33 @@
 
     <template #actions="{ row }">
       <div class="action-buttons">
-        <el-button link size="small" type="primary" @click="openEditModal(row)">
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ kế toán mới có thể chỉnh sửa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="primary" :disabled="!canModify">
+            <img alt="Edit" src="@/assets/img/edit.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="primary" @click="openEditModal(row)">
           <img alt="Edit" src="@/assets/img/edit.svg" />
         </el-button>
+
         <div class="divider"></div>
-        <el-button link size="small" type="danger" @click="openDeleteConfirm(row.id)">
+
+        <el-tooltip
+          v-if="!canModify"
+          content="Chỉ kế toán mới có thể xóa"
+          placement="top"
+          effect="light"
+        >
+          <el-button link size="small" type="danger" :disabled="!canModify">
+            <img alt="Delete" src="@/assets/img/delete.svg" class="disabled-icon" />
+          </el-button>
+        </el-tooltip>
+        <el-button v-else link size="small" type="danger" @click="openDeleteConfirm(row.id)">
           <img alt="Delete" src="@/assets/img/delete.svg" />
         </el-button>
       </div>
@@ -174,8 +213,9 @@
 
 <script setup lang="ts">
 import Table from '@/components/Table.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import { useFeeCampaignStore } from '@/stores/feeCampaignStore'
+import { useAuthStore } from '@/stores/authStore'
 import { useFeeTypeStore } from '@/stores/feeTypeStore'
 import Pagination from '@/components/Pagination.vue'
 import Modal from '@/components/Modal.vue'
@@ -187,7 +227,11 @@ import type { FeeCampaign } from '@/types/fee_campaign'
 const feeCampaignStore = useFeeCampaignStore()
 const feeTypeStore = useFeeTypeStore()
 const fetchLoading = ref<boolean>(false)
+const authStore = useAuthStore()
 const feeTypeOptions = ref<{ value: number; label: string }[]>([])
+const isAccountant = computed(() => authStore.userInfo?.role === 2)
+const isLeader = computed(() => authStore.userInfo?.role === 1)
+const canModify = computed(() => isAccountant.value)
 
 const handleSearch = async () => {
   feeCampaignStore.pagination.current_page = 1
@@ -196,7 +240,8 @@ const handleSearch = async () => {
 
 const feeCampaign = reactive<FeeCampaign>({
   id: null,
-  fee_type_id: 0,
+  // @ts-ignore
+  fee_type_id: null,
   start_date: '',
   end_date: '',
   note: '',
@@ -246,7 +291,7 @@ const resetForm = () => {
   feeCampaignStore.selectedFeeCampaign = null
   Object.assign(feeCampaign, {
     id: null,
-    fee_type_id: 0,
+    fee_type_id: null,
     start_date: '',
     end_date: '',
     note: '',

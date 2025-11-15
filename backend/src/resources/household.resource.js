@@ -11,6 +11,7 @@ module.exports = (household) => {
         id: household.id,
         owner_name: household.owner_name,
         apartment_code: household.apartment_code,
+        floor_area: household.floor_area,
         address: household.address,
         phone_number: household.phone_number,
         created_at: household.created_at,

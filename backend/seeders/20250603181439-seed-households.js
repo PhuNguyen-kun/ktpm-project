@@ -9,10 +9,9 @@ module.exports = {
                 id: i,
                 owner_name: `Chủ hộ ${i}`,
                 apartment_code: `B3-${200 + i}`,
-                address: `Block B3, Floor 20, Apartment ${200 + i}`,
-                phone_number: `09876543${(100 + i)
-                    .toString()
-                    .padStart(3, "0")}`,
+                floor_area: (50 + i * 5).toFixed(2), // Diện tích từ 55.00 đến 100.00 m²
+                address: `Tòa B3, Tầng 20, Căn hộ ${200 + i}`,
+                phone_number: `09876543${(10 + i).toString().padStart(3, "0")}`,
                 created_at: now,
                 updated_at: now,
             });
